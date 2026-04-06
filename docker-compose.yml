@@ -1,0 +1,131 @@
+version: '3.8'
+
+services:
+  # Pharmacy PWA Frontend Application
+  pharmacy-pwa:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=production
+    container_name: pharmacy-pwa
+    ports:
+      - "9002:80"  # Map host port 9002 to container port 80
+    environment:
+      # API Configuration
+      - NODE_ENV=production
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://10.10.20.80:3001/api}
+      - VITE_APP_URL=${VITE_APP_URL:-http://10.10.20.80:9002}
+      
+      # WebAuthn Configuration
+      - VITE_WEBAUTHN_RP_NAME=${VITE_WEBAUTHN_RP_NAME:-Pharmacy Portal}
+      - VITE_WEBAUTHN_RP_ID=${VITE_WEBAUTHN_RP_ID:-10.10.20.80}
+      - VITE_WEBAUTHN_ORIGIN=${VITE_WEBAUTHN_ORIGIN:-http://10.10.20.80:9002}
+      
+      # Features Toggle
+      - VITE_ENABLE_BIOMETRIC=${VITE_ENABLE_BIOMETRIC:-true}
+      - VITE_ENABLE_PUSH_NOTIFICATIONS=${VITE_ENABLE_PUSH_NOTIFICATIONS:-true}
+      - VITE_ENABLE_OFFLINE=${VITE_ENABLE_OFFLINE:-true}
+      
+      # Default Settings
+      - VITE_DEFAULT_LANGUAGE=${VITE_DEFAULT_LANGUAGE:-ar}
+      - VITE_DEFAULT_THEME=${VITE_DEFAULT_THEME:-light}
+      - VITE_DEFAULT_STORE_ID=${VITE_DEFAULT_STORE_ID:-6}
+    volumes:
+      # For development - mount source code (comment out in production)
+      # - ./src:/app/src:ro
+      # - ./public:/app/public:ro
+      
+      # Nginx logs
+      - pharmacy-logs:/var/log/nginx
+    networks:
+      - pharmacy-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    depends_on:
+      - redis  # If you add Redis cache
+
+  # Redis Cache (Optional - Uncomment if needed)
+  redis:
+    image: redis:7-alpine
+    container_name: pharmacy-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - pharmacy-network
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+  # Nginx Reverse Proxy (Optional - for production with SSL)
+  # nginx-proxy:
+  #   image: nginx:alpine
+  #   container_name: pharmacy-nginx-proxy
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx-proxy.conf:/etc/nginx/nginx.conf:ro
+  #     - ./ssl:/etc/nginx/ssl:ro
+  #     - nginx-cache:/var/cache/nginx
+  #   networks:
+  #     - pharmacy-network
+  #   depends_on:
+  #     - pharmacy-pwa
+  #   restart: unless-stopped
+
+networks:
+  pharmacy-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  redis-data:
+    driver: local
+  pharmacy-logs:
+    driver: local
+  nginx-cache:
+    driver: local
+
+# Development override configuration
+# Create a file named docker-compose.override.yml for local development:
+#
+# version: '3.8'
+# services:
+#   pharmacy-pwa:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile.dev
+#     volumes:
+#       - ./src:/app/src
+#       - ./public:/app/public
+#       - ./index.html:/app/index.html
+#       - /app/node_modules
+#     environment:
+#       - NODE_ENV=development
+#     command: npm run dev -- --host 0.0.0.0
+#     ports:
+#       - "5173:5173"

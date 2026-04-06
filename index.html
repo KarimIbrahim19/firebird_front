@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="description" content="بوابة إلكترونية لطلبات الصيدليات - Pharmacy Portal for Orders Management" />
+  
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#4f46e5" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="الصيدليات" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
+  
+  <!-- iOS Splash Screens -->
+  <link rel="apple-touch-startup-image" href="/splash/splash-640x1136.png" media="(device-width: 320px) and (device-height: 568px)" />
+  <link rel="apple-touch-startup-image" href="/splash/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px)" />
+  <link rel="apple-touch-startup-image" href="/splash/splash-1242x2208.png" media="(device-width: 414px) and (device-height: 736px)" />
+  <link rel="apple-touch-startup-image" href="/splash/splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px)" />
+  
+  <!-- Icons -->
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
+  <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#4f46e5" />
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <title>دار الحكمة - بوابة الصيدليات</title>
+  
+  <style>
+    /* Critical CSS for initial render */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    
+    #root {
+      min-height: 100vh;
+    }
+    
+    /* Initial loading screen */
+    .app-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .app-loading-content {
+      text-align: center;
+      color: white;
+    }
+    
+    .app-loading-logo {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 24px;
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    .app-loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+    
+    .app-loading-text {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .app-loading-subtext {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    /* RTL Support */
+    [dir="rtl"] {
+      text-align: right;
+    }
+    
+    /* Dark Mode */
+    [data-theme="dark"] {
+      color-scheme: dark;
+    }
+    
+    [data-theme="dark"] .app-loading {
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    }
+    
+    /* Safe Areas for iOS */
+    .safe-top {
+      padding-top: env(safe-area-inset-top);
+    }
+    
+    .safe-bottom {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    
+    /* Prevent text selection on UI elements */
+    .no-select {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    
+    /* Smooth iOS scrolling */
+    .smooth-scroll {
+      -webkit-overflow-scrolling: touch;
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <!-- Loading screen shown before React loads -->
+    <div class="app-loading">
+      <div class="app-loading-content">
+        <div class="app-loading-logo">
+          <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="10" width="100" height="100" rx="20" fill="white" fill-opacity="0.2"/>
+            <path d="M60 30v30M60 60h20M60 60H40M60 60v30" stroke="white" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="60" cy="60" r="45" stroke="white" stroke-width="3" fill="none"/>
+          </svg>
+        </div>
+        <div class="app-loading-spinner"></div>
+        <div class="app-loading-text" id="loading-text">دار الحكمة</div>
+        <div class="app-loading-subtext" id="loading-subtext">جاري التحميل...</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- No JavaScript Message -->
+  <noscript>
+    <style>
+      .app-loading { display: none !important; }
+      .noscript-message {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
+        text-align: center;
+        background: #f3f4f6;
+      }
+      .noscript-content {
+        max-width: 400px;
+        padding: 32px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      }
+      .noscript-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+      }
+      .noscript-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 12px;
+        color: #111827;
+      }
+      .noscript-text {
+        font-size: 16px;
+        color: #6b7280;
+        line-height: 1.5;
+      }
+    </style>
+    <div class="noscript-message">
+      <div class="noscript-content">
+        <div class="noscript-icon">⚠️</div>
+        <div class="noscript-title">يجب تفعيل JavaScript</div>
+        <div class="noscript-text">
+          هذا التطبيق يحتاج إلى JavaScript ليعمل بشكل صحيح. يرجى تفعيل JavaScript في متصفحك وإعادة تحميل الصفحة.
+        </div>
+      </div>
+    </div>
+  </noscript>
+  
+  <!-- Initialize Loading Screen Language -->
+  <script>
+    (function() {
+      try {
+        // Get language from localStorage
+        const uiStorage = localStorage.getItem('ui-storage');
+        let language = 'ar'; // default
+
+        if (uiStorage) {
+          const { state } = JSON.parse(uiStorage);
+          language = state?.language || 'ar';
+        }
+
+        // Update loading screen text based on language
+        const loadingText = document.getElementById('loading-text');
+        const loadingSubtext = document.getElementById('loading-subtext');
+
+        if (loadingText && loadingSubtext) {
+          if (language === 'en') {
+            loadingText.textContent = 'Dar Al-Hekma';
+            loadingSubtext.textContent = 'Loading...';
+          }
+          // Arabic is already default in HTML
+        }
+      } catch (error) {
+        // Keep default Arabic text if error
+        console.error('Error loading language:', error);
+      }
+    })();
+  </script>
+
+  <!-- React App Entry Point -->
+  <script type="module" src="/src/main.jsx"></script>
+
+  <!-- Register Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator && !window.location.hostname.includes('localhost')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => console.log('SW registered:', registration))
+          .catch(error => console.log('SW registration failed:', error));
+      });
+    }
+  </script>
+</body>
+</html>
