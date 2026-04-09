@@ -63,13 +63,11 @@ const tokenManager = {
 // Request interceptor
 apiClient.interceptors.request.use(
   (config) => {
-    // Add access token if available
     const token = tokenManager.getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    // Add language header
     const uiData = localStorage.getItem('ui-storage');
     if (uiData) {
       try {
@@ -107,7 +105,6 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Handle 401 errors (unauthorized)
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise(function(resolve, reject) {
@@ -125,7 +122,6 @@ apiClient.interceptors.response.use(
 
       const refreshToken = tokenManager.getRefreshToken();
 
-      // Only try to refresh if refresh token exists (rememberMe was true)
       if (refreshToken) {
         try {
           const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
@@ -147,8 +143,6 @@ apiClient.interceptors.response.use(
           return Promise.reject(refreshError);
         }
       } else {
-        // No refresh token available (user didn't check rememberMe)
-        // Clear auth and redirect to login
         isRefreshing = false;
         processQueue(error, null);
         tokenManager.clearTokens();
@@ -176,21 +170,19 @@ export const authAPI = {
   login: (data) => apiClient.post('/auth/login', data),
   logout: () => apiClient.post('/auth/logout'),
   refresh: (refreshToken) => apiClient.post('/auth/refresh', { refreshToken }),
-  
-  // WebAuthn
-  checkBiometricAvailability: (email) => 
+  checkBiometricAvailability: (email) =>
     apiClient.get(`/auth/webauthn/check-availability?email=${email}`),
-  getRegisterChallenge: () => 
+  getRegisterChallenge: () =>
     apiClient.get('/auth/webauthn/register-challenge'),
-  verifyRegister: (data) => 
+  verifyRegister: (data) =>
     apiClient.post('/auth/webauthn/register-verify', data),
-  getLoginChallenge: (email) => 
+  getLoginChallenge: (email) =>
     apiClient.get(`/auth/webauthn/login-challenge?email=${email}`),
-  verifyLogin: (data) => 
+  verifyLogin: (data) =>
     apiClient.post('/auth/webauthn/login-verify', data),
-  listCredentials: () => 
+  listCredentials: () =>
     apiClient.get('/auth/webauthn/credentials'),
-  deleteCredential: (id) => 
+  deleteCredential: (id) =>
     apiClient.delete(`/auth/webauthn/credentials/${id}`),
 };
 
@@ -222,6 +214,14 @@ export const productAPI = {
     apiClient.get(`/products/${slug}?store=${store}`),
   getCategories: (store = DEFAULT_STORE_ID) =>
     apiClient.get(`/categories?store=${store}`),
+};
+
+// Customer search endpoint (no auth required)
+export const customerAPI = {
+  search: (query) => {
+    const params = new URLSearchParams({ query });
+    return apiClient.get(`/customers/search?${params}`);
+  },
 };
 
 // Order endpoints
