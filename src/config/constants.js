@@ -1,9 +1,9 @@
 // App configuration constants
 export const APP_CONFIG = {
   name: import.meta.env.VITE_APP_NAME || 'دار الحكمة',
-  nameEn: import.meta.env.VITE_APP_NAME_EN || 'Dar ElHekma',
-  description: import.meta.env.VITE_APP_DESCRIPTION || 'بوابة إلكترونية لطلبات الصيدليات',
-  descriptionEn: import.meta.env.VITE_APP_DESCRIPTION_EN || 'Pharmacy Portal for Orders Management',
+  nameEn: import.meta.env.VITE_APP_NAME_EN || 'دار الحكمة',
+  description: import.meta.env.VITE_APP_DESCRIPTION || 'بوابة دار الحكمة',
+  descriptionEn: import.meta.env.VITE_APP_DESCRIPTION_EN || 'Dar ElHekma Portal',
   version: import.meta.env.VITE_APP_VERSION || '1.0.0',
 };
 

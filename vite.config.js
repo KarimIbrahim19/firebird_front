@@ -10,9 +10,9 @@ export default defineConfig(({ mode }) => {
 
   // App information from env
   const appName = env.VITE_APP_NAME || 'دار الحكمة';
-  const appNameEn = env.VITE_APP_NAME_EN || 'Dar ElHekma';
-  const appDescription = env.VITE_APP_DESCRIPTION || 'بوابة إلكترونية لطلبات الصيدليات';
-  const appDescriptionEn = env.VITE_APP_DESCRIPTION_EN || 'Pharmacy Portal for Orders Management';
+  const appNameEn = env.VITE_APP_NAME_EN || 'دار الحكمة';
+  const appDescription = env.VITE_APP_DESCRIPTION || 'بوابة دار الحكمة';
+  const appDescriptionEn = env.VITE_APP_DESCRIPTION_EN || 'Dar ElHekma Portal';
 
   // Create regex pattern from API base URL for service worker caching
   // Escape special regex characters and create pattern

@@ -16,7 +16,7 @@ const MainLayout = ({ children }) => {
   const getPageTitle = () => {
     const path = location.pathname;
     if (path === '/' || path === '/customers')
-      return language === 'ar' ? 'بحث العملاء' : 'Customer Search';
+      return t('clients.title');
     if (path === '/dashboard') return t('dashboard.title');
     if (path === '/products')  return t('products.title');
     if (path === '/orders')    return t('orders.title');
@@ -52,7 +52,7 @@ const MainLayout = ({ children }) => {
  
         <main className="flex-1">
           {/* Breadcrumb (hidden on home / customers page) */}
-          {!isHome && (
+          {/*!isHome && (
             <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-2.5">
               <nav className="text-sm max-w-7xl mx-auto">
                 <ol className="flex items-center gap-2">
@@ -61,7 +61,7 @@ const MainLayout = ({ children }) => {
                       href="/"
                       className="text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors"
                     >
-                      {language === 'ar' ? 'العملاء' : 'Customers'}
+                      {t('clients.title')}
                     </a>
                   </li>
                   <li className="text-gray-400 dark:text-gray-600">/</li>
@@ -71,7 +71,7 @@ const MainLayout = ({ children }) => {
                 </ol>
               </nav>
             </div>
-          )}
+          )*/}
  
           {children}
         </main>

@@ -136,12 +136,7 @@ const IdleState = ({ language }) => (
       </svg>
     </div>
     <p className="text-gray-600 dark:text-gray-400 font-medium text-lg">
-      {language === 'ar' ? 'ابحث عن عميل' : 'Search for a customer'}
-    </p>
-    <p className="text-sm text-gray-400 dark:text-gray-500 mt-2 max-w-xs">
-      {language === 'ar'
-        ? 'أدخل اسم الصيدلية بالعربي أو الإنجليزي، أو رقم الهاتف'
-        : 'Enter a pharmacy name in Arabic or English, or a phone number'}
+      {language === 'ar' ? 'بحث عن عميل' : 'Search for a customer'}
     </p>
   </div>
 );
@@ -174,7 +169,7 @@ const CustomersPage = () => {
 
     const trimmed = inputValue.trim();
 
-    if (trimmed.length < 2) {
+    if (trimmed.length < 3) {
       if (trimmed.length === 0) {
         setResults([]);
         setMeta(null);
@@ -239,34 +234,6 @@ const CustomersPage = () => {
         {/* ── Sticky Search Header ── */}
         <div className="sticky top-0 z-20 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
           <div className="max-w-3xl mx-auto px-4 py-4">
-            {/* Title row */}
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </div>
-                <h1 className="text-lg font-bold text-gray-900 dark:text-white">
-                  {language === 'ar' ? 'بحث العملاء' : 'Customer Search'}
-                </h1>
-              </div>
-
-              {/* Meta info */}
-              {meta && !isLoading && (
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                    {meta.count} {language === 'ar' ? 'نتيجة' : 'results'}
-                  </span>
-                  {meta.cached && (
-                    <span className="px-1.5 py-0.5 text-xs rounded bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 font-medium">
-                      {language === 'ar' ? 'مؤقت' : 'cached'}
-                    </span>
-                  )}
-                </div>
-              )}
-            </div>
-
             {/* Search Input */}
             <div className="relative">
               {/* Search icon / spinner */}
@@ -320,24 +287,42 @@ const CustomersPage = () => {
               )}
             </div>
 
-            {/* Search mode indicator */}
-            {searchMode && !isLoading && (
-              <div className="mt-2 flex items-center gap-1.5">
-                <span className={`w-2 h-2 rounded-full ${searchMode === 'phone' ? 'bg-green-500' : 'bg-indigo-500'}`} />
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                  {searchMode === 'phone'
-                    ? (language === 'ar' ? 'بحث برقم الهاتف' : 'Phone search')
-                    : (language === 'ar' ? 'بحث بالاسم' : 'Name search')}
-                </span>
+            {/* Below search bar: meta info on one side, search mode on the other */}
+            <div className="mt-2 flex items-center justify-between">
+              {/* Search mode indicator (start side) */}
+              <div className="flex items-center gap-2">
+                {searchMode && !isLoading && (
+                  <div className="flex items-center gap-1.5">
+                    <span className={`w-2 h-2 rounded-full ${searchMode === 'phone' ? 'bg-green-500' : 'bg-indigo-500'}`} />
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      {searchMode === 'phone'
+                        ? (language === 'ar' ? 'بحث برقم الهاتف' : 'Phone search')
+                        : (language === 'ar' ? 'بحث بالاسم' : 'Name search')}
+                    </span>
+                  </div>
+                )}
+                {/* Min chars hint (visible only when needed) */}
+                {inputValue.trim().length > 0 && inputValue.trim().length < 3 && (
+                  <p className="text-xs text-amber-600 dark:text-amber-400">
+                    {language === 'ar' ? 'اكتب ٣ أحرف على الأقل' : 'Type at least 3 characters'}
+                  </p>
+                )}
               </div>
-            )}
 
-            {/* Min chars hint */}
-            {inputValue.trim().length === 1 && (
-              <p className="mt-2 text-xs text-amber-600 dark:text-amber-400">
-                {language === 'ar' ? 'اكتب حرفًا واحدًا على الأقل إضافيًا' : 'Type at least one more character'}
-              </p>
-            )}
+              {/* Meta info (end side) */}
+              {meta && !isLoading && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    {meta.count} {language === 'ar' ? 'نتيجة' : 'results'}
+                  </span>
+                  {meta.cached && (
+                    <span className="px-1.5 py-0.5 text-xs rounded bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 font-medium">
+                      {language === 'ar' ? 'مؤقت' : 'cached'}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

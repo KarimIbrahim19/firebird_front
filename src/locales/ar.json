@@ -89,6 +89,10 @@
     "pharmacySelected": "تم اختيار الصيدلية بنجاح",
     "selectPharmacyFirst": "يرجى اختيار صيدلية أولاً"
   },
+
+  "clients": {
+    "title": "العملاء"
+  },
   
   "products": {
     "title": "المنتجات",

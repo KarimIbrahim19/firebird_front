@@ -1,10 +1,10 @@
 // src/api/client.js
 import axios from 'axios';
- 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://10.10.20.80:3001/api';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:3001/api';
 const API_TIMEOUT = parseInt(import.meta.env.VITE_API_TIMEOUT) || 30000;
-const DEFAULT_STORE_ID = parseInt(import.meta.env.VITE_DEFAULT_STORE_ID) || 1;
- 
+const DEFAULT_STORE_ID = parseInt(import.meta.env.VITE_DEFAULT_STORE_ID) || 6;
+
 // Create axios instance
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -13,7 +13,7 @@ const apiClient = axios.create({
   },
   timeout: API_TIMEOUT,
 });
- 
+
 // Token management functions
 const tokenManager = {
   getAccessToken: () => {
@@ -28,7 +28,7 @@ const tokenManager = {
     }
     return null;
   },
- 
+
   getRefreshToken: () => {
     try {
       const authData = localStorage.getItem('auth-storage');
@@ -41,7 +41,7 @@ const tokenManager = {
     }
     return null;
   },
- 
+
   setAccessToken: (token) => {
     try {
       const authData = localStorage.getItem('auth-storage');
@@ -54,12 +54,12 @@ const tokenManager = {
       console.error('Error setting access token:', error);
     }
   },
- 
+
   clearTokens: () => {
     localStorage.removeItem('auth-storage');
   }
 };
- 
+
 // Request interceptor
 apiClient.interceptors.request.use(
   (config) => {
@@ -67,7 +67,7 @@ apiClient.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
- 
+
     const uiData = localStorage.getItem('ui-storage');
     if (uiData) {
       try {
@@ -77,18 +77,18 @@ apiClient.interceptors.request.use(
         config.headers['Accept-Language'] = 'ar';
       }
     }
- 
+
     return config;
   },
   (error) => {
     return Promise.reject(error);
   }
 );
- 
+
 // Response interceptor
 let isRefreshing = false;
 let failedQueue = [];
- 
+
 const processQueue = (error, token = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
@@ -99,12 +99,12 @@ const processQueue = (error, token = null) => {
   });
   failedQueue = [];
 };
- 
+
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
- 
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise(function(resolve, reject) {
@@ -116,23 +116,23 @@ apiClient.interceptors.response.use(
           return Promise.reject(err);
         });
       }
- 
+
       originalRequest._retry = true;
       isRefreshing = true;
- 
+
       const refreshToken = tokenManager.getRefreshToken();
- 
+
       if (refreshToken) {
         try {
           const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
             refreshToken
           });
- 
+
           const { accessToken } = response.data.data;
           tokenManager.setAccessToken(accessToken);
           processQueue(null, accessToken);
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
- 
+
           isRefreshing = false;
           return apiClient(originalRequest);
         } catch (refreshError) {
@@ -150,11 +150,11 @@ apiClient.interceptors.response.use(
         return Promise.reject(error);
       }
     }
- 
+
     return Promise.reject(error);
   }
 );
- 
+
 // API methods wrapper
 export const api = {
   get: (url, config = {}) => apiClient.get(url, config),
@@ -163,7 +163,7 @@ export const api = {
   delete: (url, config = {}) => apiClient.delete(url, config),
   patch: (url, data = {}, config = {}) => apiClient.patch(url, data, config),
 };
- 
+
 // Auth endpoints
 export const authAPI = {
   register: (data) => apiClient.post('/auth/register', data),
@@ -185,14 +185,14 @@ export const authAPI = {
   deleteCredential: (id) =>
     apiClient.delete(`/auth/webauthn/credentials/${id}`),
 };
- 
+
 // User endpoints
 export const userAPI = {
   getProfile: () => apiClient.get('/users/profile'),
   updateProfile: (data) => apiClient.put('/users/profile', data),
   changePassword: (data) => apiClient.put('/users/password', data),
 };
- 
+
 // Pharmacy endpoints
 export const pharmacyAPI = {
   getAvailable: () => apiClient.get('/pharmacies/available'),
@@ -203,24 +203,24 @@ export const pharmacyAPI = {
     return apiClient.get(`/pharmacies/statement?${queryString}`);
   },
 };
- 
+
 // Product endpoints
 export const productAPI = {
   getProducts: (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
     return apiClient.get(`/products?${queryString}`);
   },
-  getProductBySlug: (slug, store = DEFAULT_STORE_ID) =>
-    apiClient.get(`/products/${slug}?store=${store}`),
+  getProductBySlug: (slug) =>
+    apiClient.get(`/products/${slug}`),
   getCategories: (store = DEFAULT_STORE_ID) =>
     apiClient.get(`/categories?store=${store}`),
 };
- 
+
 // Store endpoints
 export const storeAPI = {
   getStores: () => apiClient.get('/stores'),
 };
- 
+
 // Customer search endpoint (no auth required)
 export const customerAPI = {
   search: (query) => {
@@ -228,7 +228,7 @@ export const customerAPI = {
     return apiClient.get(`/customers/search?${params}`);
   },
 };
- 
+
 // Order endpoints
 export const orderAPI = {
   getOrders: (params = {}) => {
@@ -237,5 +237,5 @@ export const orderAPI = {
   },
   getStatistics: () => apiClient.get('/pharmacy/orders/statistics'),
 };
- 
+
 export default apiClient;

@@ -90,7 +90,7 @@ const LoginPage = () => {
               {getAppName(language)}
             </h1>
             <p className="text-indigo-300 text-sm mt-1">
-              {language === 'ar' ? 'بوابة الموظفين' : 'Employee Portal'}
+              {t('auth.title')}
             </p>
           </div>
 

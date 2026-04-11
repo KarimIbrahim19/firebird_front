@@ -89,6 +89,10 @@
     "pharmacySelected": "Pharmacy selected successfully",
     "selectPharmacyFirst": "Please select a pharmacy first"
   },
+
+  "clients": {
+    "title": "Clients"
+  },
   
   "products": {
     "title": "Products",
