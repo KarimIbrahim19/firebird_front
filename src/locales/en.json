@@ -38,7 +38,7 @@
   
   "auth": {
     "title": "Sign In",
-    "email": "Email",
+    "email": "Username",
     "password": "Password",
     "fullName": "Full Name",
     "phone": "Phone Number",
@@ -57,7 +57,7 @@
     "biometricRegistered": "Biometric registered successfully",
     "biometricRemoved": "Biometric removed successfully",
     "noBiometric": "No biometric registered for this account",
-    "invalidCredentials": "Invalid email or password",
+    "invalidCredentials": "Invalid username or password",
     "accountLocked": "Account locked. Try again later",
     "tooManyAttempts": "Too many attempts. Try again in a minute",
     "emailRequired": "Email is required",

@@ -50,7 +50,7 @@ const Header = ({ onMenuClick, pageTitle }) => {
           )}
  
           {/* Notifications bell */}
-          <div className="relative">
+          {/*<div className="relative">
             <button
               onClick={() => setNotificationOpen((o) => !o)}
               className="p-2 rounded-md text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 relative"
@@ -79,7 +79,7 @@ const Header = ({ onMenuClick, pageTitle }) => {
                 </div>
               </div>
             )}
-          </div>
+          </div>*/}
  
           {/* Theme toggle */}
           <button

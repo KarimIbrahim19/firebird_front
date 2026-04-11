@@ -136,7 +136,7 @@ const IdleState = ({ language }) => (
       </svg>
     </div>
     <p className="text-gray-600 dark:text-gray-400 font-medium text-lg">
-      {language === 'ar' ? 'بحث عن عميل' : 'Search for a customer'}
+      {language === 'ar' ? 'بحث عن عميل' : 'Search for a client'}
     </p>
   </div>
 );
