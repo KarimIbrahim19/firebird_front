@@ -1,4 +1,4 @@
-// src/pages/Products.tsx
+// src/pages/Products.jsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
@@ -11,7 +11,6 @@ const DEFAULT_STORE_ID = 1;
 const ProductDetailModal = ({ slug, language, t, onClose }) => {
   const overlayRef = useRef(null);
 
-  // Close on Escape
   useEffect(() => {
     const handler = (e) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', handler);
@@ -22,7 +21,6 @@ const ProductDetailModal = ({ slug, language, t, onClose }) => {
     };
   }, [onClose]);
 
-  // Click outside to close
   const handleOverlayClick = useCallback((e) => {
     if (e.target === overlayRef.current) onClose();
   }, [onClose]);
@@ -41,10 +39,8 @@ const ProductDetailModal = ({ slug, language, t, onClose }) => {
     ? (language === 'ar' ? product.name : product.nameEn || product.name)
     : '';
 
-  // Total stock across all stores
   const totalStock = product?.stores?.reduce((sum, s) => sum + (s.stock || 0), 0) ?? 0;
 
-  // Helper to display stock number consistently
   const formatStock = (value) => {
     if (value === 0) return '0';
     return value.toLocaleString();
@@ -58,13 +54,14 @@ const ProductDetailModal = ({ slug, language, t, onClose }) => {
     >
       <div
         className="
-          relative w-full max-w-lg bg-white dark:bg-gray-800
+          relative w-full max-w-lg
+          bg-white dark:bg-gray-800
           rounded-2xl shadow-2xl overflow-hidden
           animate-modal-in
         "
         style={{ maxHeight: '90vh' }}
       >
-        {/* ── Close button ── */}
+        {/* Close button */}
         <button
           onClick={onClose}
           className="
@@ -82,10 +79,10 @@ const ProductDetailModal = ({ slug, language, t, onClose }) => {
           </svg>
         </button>
 
-        {/* ── Loading ── */}
+        {/* Loading */}
         {isLoading && (
           <div className="flex flex-col items-center justify-center py-20 px-8">
-            <svg className="w-8 h-8 text-indigo-500 animate-spin mb-3" viewBox="0 0 24 24" fill="none">
+            <svg className="w-8 h-8 text-primary-500 animate-spin mb-3" viewBox="0 0 24 24" fill="none">
               <circle className="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3"/>
               <path className="opacity-80" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3V0a12 12 0 100 24v-4l-3 3 3 3v4A12 12 0 014 12z"/>
             </svg>
@@ -95,7 +92,7 @@ const ProductDetailModal = ({ slug, language, t, onClose }) => {
           </div>
         )}
 
-        {/* ── Error ── */}
+        {/* Error */}
         {!isLoading && error && (
           <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
             <svg className="w-10 h-10 text-red-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,31 +104,32 @@ const ProductDetailModal = ({ slug, language, t, onClose }) => {
           </div>
         )}
 
-        {/* ── Content ── */}
+        {/* Content */}
         {!isLoading && !error && product && (
           <div className="overflow-y-auto" style={{ maxHeight: '90vh' }}>
             <div className="p-5 space-y-4">
-              {/* Name (full width) */}
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white leading-snug pr-8">
+
+              {/* Name */}
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white leading-snug pe-8">
                 {name}
               </h2>
 
-              {/* Price on its own line to avoid overlapping close button */}
+              {/* Price */}
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                   {language === 'ar' ? 'سعر الجمهور' : 'Public Price'}
                 </span>
-                <span className="text-xl font-extrabold text-indigo-600 dark:text-indigo-400">
+                <span className="text-xl font-extrabold text-primary-600 dark:text-primary-400">
                   {product.originalPrice != null
                     ? `${product.originalPrice.toLocaleString()} ${t('common.currency')}`
                     : '—'}
                 </span>
               </div>
 
-              {/* Meta row: category, manufacturer, barcode */}
+              {/* Meta: category, manufacturer, barcode */}
               <div className="flex flex-wrap gap-2">
                 {product.category && (
-                  <span className="px-2.5 py-1 text-xs rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 font-medium">
+                  <span className="px-2.5 py-1 text-xs rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 font-medium">
                     {language === 'ar' ? product.category.name : product.category.nameEn || product.category.name}
                   </span>
                 )}
@@ -140,7 +138,6 @@ const ProductDetailModal = ({ slug, language, t, onClose }) => {
                     {product.manufacturer}
                   </span>
                 )}
-                {/* Barcode always shown */}
                 <span className="px-2.5 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 font-mono" dir="ltr">
                   {product.barcode || '—'}
                 </span>
@@ -153,7 +150,7 @@ const ProductDetailModal = ({ slug, language, t, onClose }) => {
                 </p>
               )}
 
-              {/* Total stock with colour coding */}
+              {/* Total stock */}
               <div className="flex items-center gap-2 pt-2 border-t border-gray-100 dark:border-gray-700">
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {language === 'ar' ? 'إجمالي المخزون' : 'Total stock'}:
@@ -194,6 +191,7 @@ const ProductDetailModal = ({ slug, language, t, onClose }) => {
                   </div>
                 </div>
               )}
+
             </div>
           </div>
         )}
@@ -213,20 +211,22 @@ const ProductCard = ({ product, language, t, onSelect }) => {
       className="
         text-start w-full
         bg-white dark:bg-gray-800
-        rounded-xl shadow-sm border border-gray-100 dark:border-gray-700
-        hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-700
+        rounded-xl shadow-sm
+        border border-gray-100 dark:border-gray-700
+        hover:shadow-md hover:border-primary-200 dark:hover:border-primary-700
         transition-all duration-200 overflow-hidden
         flex flex-col
-        focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500
+        focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500
       "
     >
-      {/* Card body – no image */}
       <div className="p-3 flex flex-col flex-1">
+
+        {/* Name */}
         <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 leading-snug mb-1 flex-1">
           {name}
         </h3>
 
-        {/* Manufacturer and Category side by side */}
+        {/* Manufacturer + Category */}
         {(product.manufacturer || product.category) && (
           <div className="flex flex-wrap items-center gap-1.5 mb-2">
             {product.manufacturer && (
@@ -238,7 +238,7 @@ const ProductCard = ({ product, language, t, onSelect }) => {
               <span className="text-xs text-gray-300 dark:text-gray-600">•</span>
             )}
             {product.category && (
-              <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400 truncate max-w-full">
+              <span className="text-xs font-medium text-primary-600 dark:text-primary-400 truncate max-w-full">
                 {language === 'ar' ? product.category.name : product.category.nameEn || product.category.name}
               </span>
             )}
@@ -246,19 +246,20 @@ const ProductCard = ({ product, language, t, onSelect }) => {
         )}
 
         <div className="border-t border-gray-100 dark:border-gray-700 pt-2 mt-auto space-y-1.5">
+
           {/* Price */}
           <div className="flex items-center justify-between">
             <span className="text-xs text-gray-500 dark:text-gray-400">
               {language === 'ar' ? 'سعر الجمهور' : 'Public Price'}
             </span>
-            <span className="text-sm font-bold text-indigo-600 dark:text-indigo-400">
+            <span className="text-sm font-bold text-primary-600 dark:text-primary-400">
               {product.originalPrice != null
                 ? `${product.originalPrice.toLocaleString()} ${t('common.currency')}`
                 : '—'}
             </span>
           </div>
 
-          {/* Stock with colour */}
+          {/* Stock */}
           <div className="flex items-center justify-between">
             <span className="text-xs text-gray-500 dark:text-gray-400">
               {t('products.stock')}
@@ -272,7 +273,7 @@ const ProductCard = ({ product, language, t, onSelect }) => {
             </span>
           </div>
 
-          {/* Barcode – always displayed */}
+          {/* Barcode */}
           <div className="flex items-center justify-between">
             <span className="text-xs text-gray-400 dark:text-gray-500">
               {t('products.barcode')}
@@ -281,13 +282,14 @@ const ProductCard = ({ product, language, t, onSelect }) => {
               {product.barcode || '—'}
             </span>
           </div>
+
         </div>
       </div>
     </button>
   );
 };
 
-// ─── Skeleton card ─────────────────────────────────────────────────────────
+// ─── Skeleton Card ─────────────────────────────────────────────────────────
 const SkeletonCard = () => (
   <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
     <div className="p-3 space-y-2">
@@ -298,7 +300,7 @@ const SkeletonCard = () => (
   </div>
 );
 
-// ─── Main page ─────────────────────────────────────────────────────────────
+// ─── Main Page ─────────────────────────────────────────────────────────────
 const ProductsPage = () => {
   const { t } = useTranslation();
   const { language } = useUIStore();
@@ -309,8 +311,9 @@ const ProductsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [page, setPage]                         = useState(1);
   const [detailSlug, setDetailSlug]             = useState(null);
+  const [inStockOnly, setInStockOnly]           = useState(false);
 
-  // Debounce search with min length 3
+  // Debounce search — min 3 chars
   useEffect(() => {
     const timer = setTimeout(() => {
       const trimmed = searchTerm.trim();
@@ -332,7 +335,7 @@ const ProductsPage = () => {
     staleTime: Infinity,
   });
 
-  // Categories (scoped to store)
+  // Categories
   const { data: categoriesData } = useQuery({
     queryKey: ['categories', selectedStore],
     queryFn: async () => {
@@ -349,7 +352,7 @@ const ProductsPage = () => {
 
   // Products
   const { data: productsData, isLoading, error } = useQuery({
-    queryKey: ['products', page, debouncedSearch, selectedStore, selectedCategory],
+    queryKey: ['products', page, debouncedSearch, selectedStore, selectedCategory, inStockOnly],
     queryFn: async () => {
       const params = {
         page: page.toString(),
@@ -358,6 +361,7 @@ const ProductsPage = () => {
       };
       if (debouncedSearch)  params.search   = debouncedSearch;
       if (selectedCategory) params.category = selectedCategory;
+      if (inStockOnly)      params.inStock  = 'true';   // ← add this line
       const res = await productAPI.getProducts(params);
       return res.data;
     },
@@ -372,16 +376,7 @@ const ProductsPage = () => {
 
   return (
     <>
-      {/* ── Modal keyframe ── */}
-      <style>{`
-        @keyframes modal-in {
-          from { opacity: 0; transform: scale(0.95) translateY(8px); }
-          to   { opacity: 1; transform: scale(1)    translateY(0); }
-        }
-        .animate-modal-in { animation: modal-in 0.18s ease-out both; }
-      `}</style>
-
-      {/* ── Detail modal ── */}
+      {/* Detail modal */}
       {detailSlug && (
         <ProductDetailModal
           slug={detailSlug}
@@ -393,9 +388,10 @@ const ProductsPage = () => {
 
       <div className="p-4 md:p-6 max-w-7xl mx-auto">
 
-        {/* Filter bar */}
+        {/* ── Filter bar ── */}
         <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-4 mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+
             {/* Search — spans 2 cols on lg */}
             <div className="lg:col-span-2">
               <div className="relative">
@@ -414,7 +410,7 @@ const ProductsPage = () => {
                 {searchTerm && (
                   <button
                     onClick={() => setSearchTerm('')}
-                    className="absolute inset-y-0 end-0 pe-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                    className="absolute inset-y-0 end-0 pe-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -429,12 +425,13 @@ const ProductsPage = () => {
                 </p>
               )}
             </div>
-            
+
             {/* Store filter */}
             <div className="relative">
               <div className="absolute inset-y-0 start-0 ps-3 flex items-center pointer-events-none">
                 <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
               </div>
               <select
@@ -454,12 +451,13 @@ const ProductsPage = () => {
                 )}
               </select>
             </div>
-              
+
             {/* Category filter */}
             <div className="relative">
               <div className="absolute inset-y-0 start-0 ps-3 flex items-center pointer-events-none">
                 <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                 </svg>
               </div>
               <select
@@ -477,31 +475,59 @@ const ProductsPage = () => {
             </div>
           </div>
 
-          {/* Single row: active filters on left, meta info on right */}
+          {/* Active filters row */}
           <div className="mt-3 flex items-center justify-between text-xs">
-            {/* Left side: active filter pills */}
+
+            {/* Active filter pills */}
             <div className="flex flex-wrap gap-2">
+              {/* In‑Stock Checkbox (always visible) */}
+              <label className="flex items-center gap-1.5 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={inStockOnly}
+                  onChange={(e) => {
+                    setInStockOnly(e.target.checked);
+                    setPage(1);
+                  }}
+                  className="checkbox w-4 h-4"
+                />
+                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'المتاح فقط' : 'In Stock Only'}
+                </span>
+              </label>
+              {/* Search term pill */}
               {debouncedSearch && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs font-medium">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                   {debouncedSearch}
-                  <button onClick={() => setSearchTerm('')} className="hover:text-red-500 transition-colors ms-0.5">×</button>
+                  <button
+                    onClick={() => setSearchTerm('')}
+                    className="hover:text-red-500 transition-colors ms-0.5"
+                  >
+                    ×
+                  </button>
                 </span>
               )}
+              {/* Category pill */}
               {selectedCategory && categoriesData && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs font-medium">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-medium">
                   {(() => {
                     const cat = categoriesData.find((c) => String(c.id) === String(selectedCategory));
                     return cat ? (language === 'ar' ? cat.name : cat.nameEn || cat.name) : selectedCategory;
                   })()}
-                  <button onClick={() => setSelectedCategory('')} className="hover:text-red-500 transition-colors ms-0.5">×</button>
+                  <button
+                    onClick={() => setSelectedCategory('')}
+                    className="hover:text-red-500 transition-colors ms-0.5"
+                  >
+                    ×
+                  </button>
                 </span>
               )}
             </div>
-            
-            {/* Right side: total count and store name */}
+
+            {/* Count + store name */}
             <div className="flex items-center gap-1.5">
               <span className="text-gray-500 dark:text-gray-400">
                 {productsData?.meta?.total != null
@@ -511,16 +537,17 @@ const ProductsPage = () => {
               {currentStoreName() && (
                 <>
                   <span className="text-gray-300 dark:text-gray-600">·</span>
-                  <span className="text-indigo-600 dark:text-indigo-400 font-medium">
+                  <span className="text-primary-600 dark:text-primary-400 font-medium">
                     {currentStoreName()}
                   </span>
                 </>
               )}
             </div>
+
           </div>
         </div>
 
-        {/* Product grid */}
+        {/* ── Product grid ── */}
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {Array.from({ length: 20 }).map((_, i) => <SkeletonCard key={i} />)}
@@ -576,20 +603,22 @@ const ProductsPage = () => {
           <div className="text-center py-16">
             <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
               </svg>
             </div>
             <p className="text-gray-600 dark:text-gray-400 font-medium">{t('products.noProducts')}</p>
             {(debouncedSearch || selectedCategory) && (
               <button
                 onClick={() => { setSearchTerm(''); setSelectedCategory(''); }}
-                className="mt-3 text-sm text-indigo-600 dark:text-indigo-400 hover:underline"
+                className="mt-3 text-sm text-primary-600 dark:text-primary-400 hover:underline"
               >
                 {language === 'ar' ? 'مسح الفلاتر' : 'Clear filters'}
               </button>
             )}
           </div>
         )}
+
       </div>
     </>
   );

@@ -58,8 +58,8 @@
     "biometricRemoved": "تم إزالة البصمة بنجاح",
     "noBiometric": "لم يتم تسجيل البصمة لهذا الحساب",
     "invalidCredentials": "اسم المستخدم أو كلمة المرور غير صحيحة",
-    "accountLocked": "تم قفل الحساب. حاول مرة أخرى لاحقاً",
-    "tooManyAttempts": "محاولات كثيرة. حاول مرة أخرى بعد دقيقة",
+    "accountLocked": "تم تجميد الحساب مؤقتاً، حاول مرة أخرى لاحقاً",
+    "tooManyAttempts": "لقد تخطيتم الحد المسموح، يرجى الانتظار دقيقة ثم المحاولة مجدداً",
     "emailRequired": "البريد الإلكتروني مطلوب",
     "passwordRequired": "كلمة المرور مطلوبة",
     "nameRequired": "الاسم مطلوب",
@@ -91,7 +91,9 @@
   },
 
   "clients": {
-    "title": "العملاء"
+    "title": "العملاء",
+    "available": "متاح",
+    "suspended": "موقوف"
   },
   
   "products": {

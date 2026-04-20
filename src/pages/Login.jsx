@@ -11,11 +11,9 @@ const LoginPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const { language } = useUIStore();
+  const { language, theme, toggleTheme, toggleLanguage } = useUIStore();
   const { login, isLoading } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
-
-  const from = location.state?.from?.pathname || '/';
 
   const {
     register,
@@ -39,49 +37,62 @@ const LoginPage = () => {
       toast.success(t('auth.loginSuccess'));
       navigate('/', { replace: true });
     } else {
-      toast.error(
-        result.error ||
-          (t('auth.invalidCredentials'))
-      );
+      toast.error(t(result.errorKey ?? 'errors.somethingWrong'));
     }
   };
 
-  /* ── Shared input class ─────────────────────────────────────────────────
-     Always uses explicit dark colors so text is always readable regardless
-     of the app theme toggle. The login page has its own dark background.   */
-  const inputCls = `
-    block w-full py-2.5 rounded-xl text-sm transition-all
-    bg-slate-800 border border-slate-600
-    text-slate-100 placeholder-slate-500
-    focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
-  `;
-
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
-      {/* Subtle grid */}
-      <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(255,255,255,0.6) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.6) 1px,transparent 1px)',
-          backgroundSize: '40px 40px',
-        }}
-      />
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 transition-colors duration-200 px-4 py-10">
+      <div className="w-full max-w-sm">
 
-      <div className="relative w-full max-w-sm">
         {/* Card */}
-        <div className="bg-slate-900/80 backdrop-blur-sm border border-slate-700 rounded-2xl shadow-2xl px-8 py-10">
+        <div className="relative bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg px-8 py-10">
 
-          {/* Logo & title */}
+          {/* ── Toggle buttons — top-end corner (right in LTR, left in RTL) ── */}
+          <div className="absolute top-3 end-3 flex items-center gap-1">
+
+            {/* Theme toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === 'light' ? (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              )}
+            </button>
+
+            {/* Language toggle */}
+            <button
+              onClick={toggleLanguage}
+              className="px-2 py-1.5 rounded-md text-xs font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              {language === 'ar' ? 'EN' : 'ع'}
+            </button>
+
+          </div>
+
+          {/* Logo + title */}
           <div className="text-center mb-8">
-            <div className="inline-flex w-16 h-16 rounded-2xl bg-indigo-600 items-center justify-center shadow-lg shadow-indigo-500/30 mb-4">
-              <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
+            <div className="mb-4">
+              <img
+                src="/icons/logo.png"
+                alt="logo"
+                className="h-20 w-auto mx-auto object-contain"
+              />
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">{getAppName(language)}</h1>
-            <p className="text-indigo-400 text-sm mt-1">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">
+              {getAppName(language)}
+            </h1>
+            <p className="text-indigo-500 dark:text-indigo-400 text-sm mt-1">
               {t('auth.title')}
             </p>
           </div>
@@ -90,12 +101,12 @@ const LoginPage = () => {
 
             {/* ── Username ── */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
-                {t('auth.title')}
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                {t('auth.email')}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 start-0 ps-3 flex items-center pointer-events-none">
-                  <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
@@ -111,20 +122,22 @@ const LoginPage = () => {
                   autoCorrect="off"
                   spellCheck="false"
                   placeholder={t('auth.email')}
-                  className={`${inputCls} ps-10 pe-4`}
+                  className="input ps-10 pe-4 h-11"
                 />
               </div>
-              {errors.username && <p className="mt-1.5 text-xs text-red-400">{errors.username.message}</p>}
+              {errors.username && (
+                <p className="mt-1.5 text-xs text-red-500 dark:text-red-400">{errors.username.message}</p>
+              )}
             </div>
 
             {/* ── Password ── */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                 {t('auth.password')}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 start-0 ps-3 flex items-center pointer-events-none">
-                  <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                       d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
@@ -137,12 +150,12 @@ const LoginPage = () => {
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
                   placeholder="••••••••"
-                  className={`${inputCls} ps-10 pe-10`}
+                  className="input ps-10 pe-10 h-11"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((p) => !p)}
-                  className="absolute inset-y-0 end-0 pe-3 flex items-center text-slate-500 hover:text-slate-300 transition-colors"
+                  className="absolute inset-y-0 end-0 pe-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                   tabIndex={-1}
                 >
                   {showPassword ? (
@@ -159,7 +172,9 @@ const LoginPage = () => {
                   )}
                 </button>
               </div>
-              {errors.password && <p className="mt-1.5 text-xs text-red-400">{errors.password.message}</p>}
+              {errors.password && (
+                <p className="mt-1.5 text-xs text-red-500 dark:text-red-400">{errors.password.message}</p>
+              )}
             </div>
 
             {/* ── Remember me ── */}
@@ -168,9 +183,9 @@ const LoginPage = () => {
                 {...register('rememberMe')}
                 id="rememberMe"
                 type="checkbox"
-                className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-0 cursor-pointer"
+                className="checkbox cursor-pointer"
               />
-              <label htmlFor="rememberMe" className="ms-2 text-sm text-slate-400 cursor-pointer select-none">
+              <label htmlFor="rememberMe" className="ms-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer select-none">
                 {t('auth.rememberMe')}
               </label>
             </div>
@@ -179,37 +194,28 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="
-                w-full py-2.5 rounded-xl font-semibold text-sm
-                bg-indigo-600 hover:bg-indigo-500 text-white
-                shadow-lg shadow-indigo-500/25
-                disabled:opacity-60 disabled:cursor-not-allowed
-                transition-all duration-200
-                focus:outline-none focus:ring-2 focus:ring-indigo-400
-              "
+              className="btn btn-primary w-full h-11 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
                   <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3V0a12 12 0 100 24v-4l-3 3 3 3v4A12 12 0 014 12z" />
+                    <path className="opacity-75" fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4l3-3-3-3V0a12 12 0 100 24v-4l-3 3 3 3v4A12 12 0 014 12z" />
                   </svg>
                   {language === 'ar' ? 'جاري الدخول...' : 'Signing in...'}
                 </span>
-              ) : (t('auth.title'))}
+              ) : t('auth.title')}
             </button>
+
           </form>
         </div>
 
-        {/* Language toggle */}
-        <div className="mt-5 text-center">
-          <button
-            onClick={() => useUIStore.getState().toggleLanguage()}
-            className="text-sm text-slate-500 hover:text-slate-300 transition-colors"
-          >
-            {language === 'ar' ? 'English' : 'العربية'}
-          </button>
-        </div>
+        {/* Footer */}
+        <p className="mt-6 text-center text-xs text-gray-400 dark:text-gray-500">
+          © {new Date().getFullYear()} {getAppName(language)}
+        </p>
+
       </div>
     </div>
   );

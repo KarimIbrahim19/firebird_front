@@ -58,8 +58,8 @@
     "biometricRemoved": "Biometric removed successfully",
     "noBiometric": "No biometric registered for this account",
     "invalidCredentials": "Invalid username or password",
-    "accountLocked": "Account locked. Try again later",
-    "tooManyAttempts": "Too many attempts. Try again in a minute",
+    "accountLocked": "Account temporarily locked, Try again later",
+    "tooManyAttempts": "Too many failed attempts, please wait a minute and try again",
     "emailRequired": "Email is required",
     "passwordRequired": "Password is required",
     "nameRequired": "Name is required",
@@ -91,7 +91,9 @@
   },
 
   "clients": {
-    "title": "Clients"
+    "title": "Clients",
+    "available": "Available",
+    "suspended": "Suspended"
   },
   
   "products": {

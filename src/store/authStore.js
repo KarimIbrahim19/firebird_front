@@ -41,12 +41,16 @@ const useAuthStore = create(
           get().setAuth(data);
           return { success: true };
         } catch (error) {
-          const errorMessage =
-            error.response?.data?.message ||
-            error.response?.data?.error ||
-            'Login failed';
-          set({ error: errorMessage, isLoading: false });
-          return { success: false, error: errorMessage };
+          const status = error.response?.status;
+          let errorKey;
+          if (!error.response)     errorKey = 'errors.networkError';
+          else if (status === 429) errorKey = 'auth.tooManyAttempts';
+          else if (status === 423) errorKey = 'auth.accountLocked';
+          else if (status === 401) errorKey = 'auth.invalidCredentials';
+          else                     errorKey = 'errors.somethingWrong';
+
+          set({ error: errorKey, isLoading: false });
+          return { success: false, errorKey };
         } finally {
           set({ isLoading: false });
         }

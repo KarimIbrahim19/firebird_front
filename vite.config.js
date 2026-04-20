@@ -24,7 +24,7 @@ export default defineConfig(({ mode }) => {
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+      includeAssets: ['icons/favicon.ico', 'icons/logo.png', 'robots.txt', 'icons/apple-touch-icon.png'],
       manifest: {
         name: `${appName} - ${appDescription}`,
         short_name: appName,
