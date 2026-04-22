@@ -145,7 +145,7 @@ const LoginPage = () => {
                 <input
                   {...register('password', {
                     required: language === 'ar' ? 'كلمة المرور مطلوبة' : 'Password is required',
-                    minLength: { value: 4, message: language === 'ar' ? 'كلمة المرور يجب أن تكون أكثر من 3 أحرف' : 'Password must be more than 3 characters' },
+                    minLength: { value: 3, message: language === 'ar' ? 'كلمة المرور يجب أن تكون أكثر من حرفين' : 'Password must be more than 2 characters' },
                   })}
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"

@@ -1,7 +1,7 @@
 {
-  "name": "pharmacy-pwa",
+  "name": "dar_elhekma",
   "version": "1.0.0",
-  "description": "Progressive Web App for Pharmacy Management",
+  "description": "Progressive Web App for ERP Management",
   "type": "module",
   "scripts": {
     "dev": "vite",

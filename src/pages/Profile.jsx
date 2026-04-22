@@ -139,11 +139,9 @@ const ProfilePage = () => {
       {/* Profile Card */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
         <div className="flex items-center space-x-4 rtl:space-x-reverse">
-          <img
-            className="w-20 h-20 rounded-full"
-            src={user?.avatarUrl || `https://ui-avatars.com/api/?name=${user?.name}&background=6366f1&color=fff`}
-            alt={user?.name}
-          />
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-2xl font-bold shadow-sm flex-shrink-0">
+            {(user?.userName || user?.name || '?').charAt(0).toUpperCase()}
+          </div>
           <div>
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">
               {user?.name}
